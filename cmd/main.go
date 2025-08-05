@@ -4,9 +4,19 @@ import (
 	"log"
 
 	"github.com/Babushkin05/wb-orders-service/internal/config"
+	"github.com/Babushkin05/wb-orders-service/pkg/logger"
 )
 
 func main() {
 	cfg := config.MustLoad()
 	log.Printf("Loaded config: %+v\n", cfg)
+
+	err := logger.Init(logger.Config{
+		Level:  cfg.LoggerConfig.Level,
+		Output: cfg.LoggerConfig.Output,
+	})
+	if err != nil {
+		log.Fatalf("Failed to initialize logger: %v", err)
+	}
+	logger.Log.Info("Logger initialized successfully")
 }
