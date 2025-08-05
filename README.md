@@ -1,0 +1,1 @@
+# Демонстрационный сервис с Kafka, PostgreSQL, Redis -  WB техношкола
