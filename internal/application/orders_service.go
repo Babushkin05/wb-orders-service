@@ -4,41 +4,42 @@ import (
 	"errors"
 
 	"github.com/Babushkin05/wb-orders-service/internal/domain/model"
+	"github.com/Babushkin05/wb-orders-service/pkg/logger"
 )
 
 type OrdersService interface {
-	GetOrder(orderUID string) (model.Order, error)
-	SaveOrder(order model.Order) error
+	GetOrder(orderUID string) (*model.Order, error)
+	SaveOrder(order *model.Order) error
 }
 
 type Service struct {
-	Casher           *Casher
-	OrdersRepository *OrdersRepository
+	cacher           Cacher
+	ordersRepository OrdersRepository
 }
 
-func NewService(casher *Casher, ordersRepository *OrdersRepository) *Service {
+var _ OrdersService = &Service{}
+
+func NewService(casher Cacher, ordersRepository OrdersRepository) *Service {
 	return &Service{
-		Casher:           casher,
-		OrdersRepository: ordersRepository,
+		cacher:           casher,
+		ordersRepository: ordersRepository,
 	}
 }
 
-_, ok = s.OrdersRepository.(*OrdersRepository)
-
-func (s *Service) GetOrder(orderUID string) (model.Order, error) {
+func (s *Service) GetOrder(orderUID string) (*model.Order, error) {
 	if orderUID == "" {
-		return model.Order{}, errors.New("orderUID is empty")
+		return &model.Order{}, errors.New("orderUID is empty")
 	}
 
-	order, err := s.Cacher.Get(orderUID)
-	if(err != nil) {
+	order, err := s.cacher.GetOrderFromCache(orderUID)
+	if err != nil {
 		logger.Log.Error(err)
 		return nil, err
 	}
 
-	if(order == nil) {
-		order, err = s.OrdersRepository.Get(orderUID)
-		if(err != nil) {
+	if order == nil {
+		order, err = s.ordersRepository.Get(orderUID)
+		if err != nil {
 			logger.Log.Error(err)
 			return nil, err
 		}
@@ -46,13 +47,13 @@ func (s *Service) GetOrder(orderUID string) (model.Order, error) {
 	return order, nil
 }
 
-func (s *Service) SaveOrder(order model.Order) error {
-	if(order == nil) {
+func (s *Service) SaveOrder(order *model.Order) error {
+	if order == nil {
 		return errors.New("order is nil")
 	}
-	if(order.UID == "") {
+	if order.OrderUID == "" {
 		return errors.New("orderUID is empty")
 	}
 
-	return s.OrdersRepository.Store(order)
+	return s.ordersRepository.Store(order)
 }
