@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/Babushkin05/wb-orders-service/internal/domain/model"
-	"github.com/Babushkin05/wb-orders-service/pkg/logger"
 )
 
 type OrdersService interface {
@@ -33,14 +32,12 @@ func (s *Service) GetOrder(orderUID string) (*model.Order, error) {
 
 	order, err := s.cacher.GetOrderFromCache(orderUID)
 	if err != nil {
-		logger.Log.Error(err)
 		return nil, err
 	}
 
 	if order == nil {
 		order, err = s.ordersRepository.Get(orderUID)
 		if err != nil {
-			logger.Log.Error(err)
 			return nil, err
 		}
 	}
@@ -53,6 +50,11 @@ func (s *Service) SaveOrder(order *model.Order) error {
 	}
 	if order.OrderUID == "" {
 		return errors.New("orderUID is empty")
+	}
+
+	err := s.cacher.Cache(order)
+	if err != nil {
+		return err
 	}
 
 	return s.ordersRepository.Store(order)
