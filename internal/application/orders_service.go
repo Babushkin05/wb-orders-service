@@ -11,21 +11,21 @@ type OrdersService interface {
 	SaveOrder(order *model.Order) error
 }
 
-type Service struct {
+type ordersService struct {
 	cacher           Cacher
 	ordersRepository OrdersRepository
 }
 
-var _ OrdersService = &Service{}
+var _ OrdersService = &ordersService{}
 
-func NewService(casher Cacher, ordersRepository OrdersRepository) *Service {
-	return &Service{
+func NewService(casher Cacher, ordersRepository OrdersRepository) OrdersService {
+	return &ordersService{
 		cacher:           casher,
 		ordersRepository: ordersRepository,
 	}
 }
 
-func (s *Service) GetOrder(orderUID string) (*model.Order, error) {
+func (s *ordersService) GetOrder(orderUID string) (*model.Order, error) {
 	if orderUID == "" {
 		return &model.Order{}, errors.New("orderUID is empty")
 	}
@@ -44,7 +44,7 @@ func (s *Service) GetOrder(orderUID string) (*model.Order, error) {
 	return order, nil
 }
 
-func (s *Service) SaveOrder(order *model.Order) error {
+func (s *ordersService) SaveOrder(order *model.Order) error {
 	if order == nil {
 		return errors.New("order is nil")
 	}
