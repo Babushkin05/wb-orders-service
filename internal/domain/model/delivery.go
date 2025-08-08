@@ -1,12 +1,14 @@
 package model
 
-// Delivery - данные доставки
+import "github.com/google/uuid"
+
 type Delivery struct {
-	Name    string `json:"name"`
-	Phone   string `json:"phone"`
-	Zip     string `json:"zip"`
-	City    string `json:"city"`
-	Address string `json:"address"`
-	Region  string `json:"region"`
-	Email   string `json:"email"`
+	OrderUID uuid.UUID `json:"-" db:"order_uid"`
+	Name     string    `json:"name" db:"name"`
+	Phone    string    `json:"phone" db:"phone"`
+	Zip      string    `json:"zip" db:"zip"`
+	City     string    `json:"city" db:"city"`
+	Address  string    `json:"address" db:"address"`
+	Region   string    `json:"region" db:"region"`
+	Email    string    `json:"email" db:"email"`
 }
