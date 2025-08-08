@@ -48,9 +48,6 @@ func (s *Service) SaveOrder(order *model.Order) error {
 	if order == nil {
 		return errors.New("order is nil")
 	}
-	if order.OrderUID == "" {
-		return errors.New("orderUID is empty")
-	}
 
 	err := s.cacher.Cache(order)
 	if err != nil {
