@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/Babushkin05/wb-orders-service/internal/config"
+	"github.com/Babushkin05/wb-orders-service/internal/infrastructure/postgres"
 	"github.com/Babushkin05/wb-orders-service/pkg/logger"
 )
 
@@ -19,4 +20,10 @@ func main() {
 		log.Fatalf("Failed to initialize logger: %v", err)
 	}
 	logger.Log.Info("Logger initialized successfully")
+
+	DBconn, err := postgres.NewDB(cfg.DataBase)
+
+	db := postgres.NewOrdersRepository(DBconn)
+	logger.Log.Info("DB initialized successfully")
+
 }
