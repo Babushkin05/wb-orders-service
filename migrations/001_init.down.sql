@@ -1,5 +1,5 @@
--- Drop tables in reverse order of creation due to foreign key constraints
-DROP TABLE IF EXISTS item;
+-- Drop tables 
+DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS payment;
 DROP TABLE IF EXISTS delivery;
