@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"os"
+	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -19,6 +20,14 @@ type Config struct {
 		Password string `yaml:"password"`
 		Name     string `yaml:"name"`
 	} `yaml:"database"`
+
+	RedisConfig struct {
+		Host     string        `yaml:"host"`
+		Port     int           `yaml:"port"`
+		Password string        `yaml:"password"`
+		DB       int           `yaml:"db"`
+		TTL      time.Duration `yaml:"ttl"`
+	} `yaml:"redis"`
 
 	KafkaConfig struct {
 		Broker  string `yaml:"broker"`

@@ -5,6 +5,7 @@ import (
 
 	"github.com/Babushkin05/wb-orders-service/internal/config"
 	"github.com/Babushkin05/wb-orders-service/internal/infrastructure/postgres"
+	"github.com/Babushkin05/wb-orders-service/internal/infrastructure/redis"
 	"github.com/Babushkin05/wb-orders-service/pkg/logger"
 )
 
@@ -25,5 +26,8 @@ func main() {
 
 	db := postgres.NewOrdersRepository(DBconn)
 	logger.Log.Info("DB initialized successfully")
+
+	redis, err := redis.NewRedisCache(cfg.RedisConfig, DBconn)
+	logger.Log.Info("Redis initialized successfully")
 
 }

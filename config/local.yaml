@@ -8,6 +8,13 @@ database:
   password: postgres
   name: orders
 
+redis:
+  host: localhost
+  port: 6379
+  password: redis
+  db: 0
+  ttl: 3600
+
 kafka:
   broker: "localhost:9092"
   topic: "order_created"
