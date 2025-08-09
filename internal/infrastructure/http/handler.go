@@ -48,5 +48,5 @@ func (h *handler) GetOrder(c *gin.Context) {
 	}
 
 	logger.Log.Infof("GetSubscription: found subscription %s", id)
-	c.JSON(http.StatusOK, resp)
+	c.Data(http.StatusOK, "application/json", resp)
 }

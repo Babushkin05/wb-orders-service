@@ -93,9 +93,6 @@ func (r *redisCache) GetOrderFromCache(orderUID string) (model.Order, error) {
 
 	data, err := r.client.Get(ctx, orderUID).Bytes()
 	if err != nil {
-		if err == redis.Nil {
-			return model.Order{}, nil
-		}
 		return model.Order{}, fmt.Errorf("redis get error: %w", err)
 	}
 
