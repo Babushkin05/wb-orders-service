@@ -33,7 +33,7 @@ type Config struct {
 		Broker  string `yaml:"broker"`
 		Topic   string `yaml:"topic"`
 		GroupID string `yaml:"group_id"`
-	}
+	} `yaml:"kafka"`
 
 	LoggerConfig struct {
 		Level  string `yaml:"level"`

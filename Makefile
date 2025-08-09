@@ -20,9 +20,22 @@ migrate-down:
 migrate-reset:
 	migrate -path $(MIGRATIONS_DIR) -database "$(DB_DSN)" drop -f
 
+docker-migrate-up:
+	docker run --rm -v $(pwd)/migrations:/migrations --network=orders-service_default migrate/migrate -path=/migrations -database "postgres://postgres:postgres@postgres:5432/orders?sslmode=disable" up
+
+docker-migrate-down:
+	docker run --rm -v $(pwd)/migrations:/migrations --network=orders-service_default migrate/migrate -path=/migrations -database "postgres://postgres:postgres@postgres:5432/orders?sslmode=disable" down 1
+
+docker-migrate-reset:
+	docker run --rm -v $(pwd)/migrations:/migrations --network=orders-service_default migrate/migrate -path=/migrations -database "postgres://postgres:postgres@postgres:5432/orders?sslmode=disable" drop -f
+
 # Создать новую миграцию: make migrate-new name=create_users
 migrate-new:
 ifndef name
 	$(error "Usage: make migrate-new name=create_something")
 endif
 	migrate create -ext sql -dir $(MIGRATIONS_DIR) -seq $(name)
+
+
+up:
+	docker-compose up --build
