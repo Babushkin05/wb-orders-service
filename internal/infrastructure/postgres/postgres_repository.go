@@ -18,13 +18,13 @@ func NewOrdersRepository(db *sqlx.DB) application.OrdersRepository {
 	return &postgresRepository{db: db}
 }
 
-func (r *postgresRepository) Get(orderUID string) (*model.Order, error) {
+func (r *postgresRepository) Get(orderUID string) (model.Order, error) {
 	ctx := context.Background()
 
 	// Начинаем транзакцию
 	tx, err := r.db.BeginTxx(ctx, nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to begin transaction: %w", err)
+		return model.Order{}, fmt.Errorf("failed to begin transaction: %w", err)
 	}
 	defer tx.Rollback()
 
@@ -34,9 +34,9 @@ func (r *postgresRepository) Get(orderUID string) (*model.Order, error) {
 	err = tx.GetContext(ctx, &order, query, orderUID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("order not found")
+			return model.Order{}, fmt.Errorf("order not found")
 		}
-		return nil, fmt.Errorf("failed to get order: %w", err)
+		return model.Order{}, fmt.Errorf("failed to get order: %w", err)
 	}
 
 	// Получаем доставку
@@ -44,7 +44,7 @@ func (r *postgresRepository) Get(orderUID string) (*model.Order, error) {
 	query = `SELECT * FROM delivery WHERE order_uid = $1`
 	err = tx.GetContext(ctx, &delivery, query, orderUID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get delivery: %w", err)
+		return model.Order{}, fmt.Errorf("failed to get delivery: %w", err)
 	}
 	order.Delivery = delivery
 
@@ -53,7 +53,7 @@ func (r *postgresRepository) Get(orderUID string) (*model.Order, error) {
 	query = `SELECT * FROM payment WHERE transaction = $1`
 	err = tx.GetContext(ctx, &payment, query, orderUID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get payment: %w", err)
+		return model.Order{}, fmt.Errorf("failed to get payment: %w", err)
 	}
 	order.Payment = payment
 
@@ -62,16 +62,16 @@ func (r *postgresRepository) Get(orderUID string) (*model.Order, error) {
 	query = `SELECT * FROM items WHERE order_uid = $1`
 	err = tx.SelectContext(ctx, &items, query, orderUID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get items: %w", err)
+		return model.Order{}, fmt.Errorf("failed to get items: %w", err)
 	}
 	order.Items = items
 
 	// Фиксируем транзакцию
 	if err = tx.Commit(); err != nil {
-		return nil, fmt.Errorf("failed to commit transaction: %w", err)
+		return model.Order{}, fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
-	return &order, nil
+	return order, nil
 }
 
 func (r *postgresRepository) Store(order *model.Order) error {

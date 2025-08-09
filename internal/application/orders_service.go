@@ -7,7 +7,7 @@ import (
 )
 
 type OrdersService interface {
-	GetOrder(orderUID string) (*model.Order, error)
+	GetOrder(orderUID string) (model.Order, error)
 	SaveOrder(order *model.Order) error
 }
 
@@ -18,29 +18,26 @@ type ordersService struct {
 
 var _ OrdersService = &ordersService{}
 
-func NewService(casher Cacher, ordersRepository OrdersRepository) OrdersService {
+func NewOrdersService(casher Cacher, ordersRepository OrdersRepository) OrdersService {
 	return &ordersService{
 		cacher:           casher,
 		ordersRepository: ordersRepository,
 	}
 }
 
-func (s *ordersService) GetOrder(orderUID string) (*model.Order, error) {
+func (s *ordersService) GetOrder(orderUID string) (model.Order, error) {
 	if orderUID == "" {
-		return &model.Order{}, errors.New("orderUID is empty")
+		return model.Order{}, errors.New("orderUID is empty")
 	}
 
 	order, err := s.cacher.GetOrderFromCache(orderUID)
 	if err != nil {
-		return nil, err
-	}
-
-	if order == nil {
 		order, err = s.ordersRepository.Get(orderUID)
 		if err != nil {
-			return nil, err
+			return model.Order{}, err
 		}
 	}
+
 	return order, nil
 }
 

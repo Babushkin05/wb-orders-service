@@ -88,21 +88,21 @@ func (r *redisCache) Cache(order *model.Order) error {
 	return nil
 }
 
-func (r *redisCache) GetOrderFromCache(orderUID string) (*model.Order, error) {
+func (r *redisCache) GetOrderFromCache(orderUID string) (model.Order, error) {
 	ctx := context.Background()
 
 	data, err := r.client.Get(ctx, orderUID).Bytes()
 	if err != nil {
 		if err == redis.Nil {
-			return nil, nil
+			return model.Order{}, nil
 		}
-		return nil, fmt.Errorf("redis get error: %w", err)
+		return model.Order{}, fmt.Errorf("redis get error: %w", err)
 	}
 
 	var order model.Order
 	if err := json.Unmarshal(data, &order); err != nil {
-		return nil, fmt.Errorf("unmarshal error: %w", err)
+		return model.Order{}, fmt.Errorf("unmarshal error: %w", err)
 	}
 
-	return &order, nil
+	return order, nil
 }

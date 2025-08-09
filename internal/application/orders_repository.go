@@ -7,7 +7,7 @@ import (
 )
 
 type OrdersRepository interface {
-	Get(orderUID string) (*model.Order, error)
+	Get(orderUID string) (model.Order, error)
 	Store(model *model.Order) error
 	SaveInboxMessage(ctx context.Context, messageID, topic, payload string) error
 	FetchUnprocessedInboxMessages(ctx context.Context, limit int) ([]model.InboxMessage, error)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/Babushkin05/wb-orders-service/internal/application"
 	"github.com/Babushkin05/wb-orders-service/internal/config"
 	"github.com/Babushkin05/wb-orders-service/internal/infrastructure/kafka"
 	"github.com/Babushkin05/wb-orders-service/internal/infrastructure/postgres"
@@ -37,5 +38,10 @@ func main() {
 
 	ctx := context.Background()
 	inboxConsumer.Start(ctx)
+	logger.Log.Info("Inbox consumer started successfully")
+
 	inboxProcessor.Start(ctx)
+	logger.Log.Info("Inbox processor started successfully")
+
+	ordersService := application.NewOrdersService(redis, db)
 }
