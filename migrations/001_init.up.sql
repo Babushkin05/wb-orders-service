@@ -32,7 +32,7 @@ CREATE TABLE payment (
     currency VARCHAR(10) NOT NULL,
     provider VARCHAR(50) NOT NULL,
     amount INTEGER NOT NULL,
-    payment_dt BIGINT NOT NULL,
+    payment_dt TIMESTAMP WITH TIME ZONE NOT NULL,
     bank VARCHAR(50) NOT NULL,
     delivery_cost INTEGER NOT NULL,
     goods_total INTEGER NOT NULL,
