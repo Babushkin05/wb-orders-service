@@ -39,3 +39,6 @@ endif
 
 up:
 	docker-compose up --build
+
+order-generator:
+	go run cmd/order-generator/main.go

@@ -62,13 +62,14 @@ func (p *inboxProcessor) processBatch(ctx context.Context) error {
 
 		if err := p.repo.Store(order); err != nil {
 			logger.Log.Errorf("failed to store order: %v", err)
-			if err := p.repo.MarkInboxMessageProcessed(ctx, msg.ID); err != nil {
-				logger.Log.Errorf(
-					"failed to mark inbox message as processed: %v",
-					err,
-				)
-				return err
-			}
+		}
+
+		if err := p.repo.MarkInboxMessageProcessed(ctx, msg.ID); err != nil {
+			logger.Log.Errorf(
+				"failed to mark inbox message as processed: %v",
+				err,
+			)
+			return err
 		}
 	}
 
