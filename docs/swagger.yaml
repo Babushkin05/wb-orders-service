@@ -107,7 +107,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /orders/{order_uid}:
+  /order/{order_uid}:
     get:
       description: Возвращает информацию о заказе по его OrderUID
       parameters:

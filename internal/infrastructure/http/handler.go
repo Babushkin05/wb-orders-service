@@ -31,14 +31,14 @@ func NewHandler(service application.OrdersService) Handler {
 // @Param order_uid path string true "Order UID"
 // @Success 200 {object} dto.Order "Успешный ответ"
 // @Failure 404 {object} dto.ErrorResponse "Заказ не найден"
-// @Router /orders/{order_uid} [get]
+// @Router /order/{order_uid} [get]
 func (h *handler) GetOrder(c *gin.Context) {
 	id := c.Param("id")
-	logger.Log.Infof("GetSubscription: getting subscription %s", id)
+	logger.Log.Infof("GetOrder: getting order %s", id)
 
 	order, err := h.service.GetOrder(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, dto.ErrorResponse{Error: "subscription not found"})
+		c.JSON(http.StatusNotFound, dto.ErrorResponse{Error: "order not found"})
 		return
 	}
 
@@ -47,6 +47,6 @@ func (h *handler) GetOrder(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: err.Error()})
 	}
 
-	logger.Log.Infof("GetSubscription: found subscription %s", id)
+	logger.Log.Infof("GetOrder: found order %s", id)
 	c.Data(http.StatusOK, "application/json", resp)
 }
