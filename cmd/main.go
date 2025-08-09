@@ -6,6 +6,7 @@ import (
 	netHttp "net/http"
 	"strconv"
 
+	_ "github.com/Babushkin05/wb-orders-service/docs"
 	"github.com/Babushkin05/wb-orders-service/internal/application"
 	"github.com/Babushkin05/wb-orders-service/internal/config"
 	"github.com/Babushkin05/wb-orders-service/internal/infrastructure/http"
@@ -14,6 +15,8 @@ import (
 	"github.com/Babushkin05/wb-orders-service/internal/infrastructure/redis"
 	"github.com/Babushkin05/wb-orders-service/pkg/logger"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -64,6 +67,8 @@ func main() {
 	handler := http.NewHandler(ordersService)
 	r := gin.Default()
 	http.RegisterRoutes(r, handler)
+	// Swagger
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Run server
 	addr := ":" + strconv.Itoa(cfg.Server.Port)

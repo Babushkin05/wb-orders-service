@@ -29,7 +29,7 @@ func NewHandler(service application.OrdersService) Handler {
 // @Tags orders
 // @Produce json
 // @Param order_uid path string true "Order UID"
-// @Success 200 {object} Order "Успешный ответ"
+// @Success 200 {object} dto.Order "Успешный ответ"
 // @Failure 404 {object} dto.ErrorResponse "Заказ не найден"
 // @Router /orders/{order_uid} [get]
 func (h *handler) GetOrder(c *gin.Context) {

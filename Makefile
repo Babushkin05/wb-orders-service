@@ -42,3 +42,6 @@ up:
 
 order-generator:
 	go run cmd/order-generator/main.go
+
+swaga:
+	swag init --dir cmd,internal/infrastructure/http,internal/shared/dto --output docs

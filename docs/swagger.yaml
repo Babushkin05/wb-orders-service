@@ -1,0 +1,133 @@
+definitions:
+  dto.Delivery:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      region:
+        type: string
+      zip:
+        type: string
+    type: object
+  dto.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  dto.Item:
+    properties:
+      brand:
+        type: string
+      chrt_id:
+        type: integer
+      name:
+        type: string
+      nm_id:
+        type: integer
+      price:
+        type: integer
+      rid:
+        type: string
+      sale:
+        type: integer
+      size:
+        type: string
+      status:
+        type: integer
+      total_price:
+        type: integer
+      track_number:
+        type: string
+    type: object
+  dto.Order:
+    properties:
+      customer_id:
+        type: string
+      date_created:
+        format: date-time
+        type: string
+      delivery:
+        $ref: '#/definitions/dto.Delivery'
+      delivery_service:
+        type: string
+      entry:
+        type: string
+      internal_signature:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dto.Item'
+        type: array
+      locale:
+        type: string
+      oof_shard:
+        type: string
+      order_uid:
+        format: uuid
+        type: string
+      payment:
+        $ref: '#/definitions/dto.Payment'
+      shardkey:
+        type: string
+      sm_id:
+        type: integer
+      track_number:
+        type: string
+    type: object
+  dto.Payment:
+    properties:
+      amount:
+        type: integer
+      bank:
+        type: string
+      currency:
+        type: string
+      custom_fee:
+        type: integer
+      delivery_cost:
+        type: integer
+      goods_total:
+        type: integer
+      payment_dt:
+        type: string
+      provider:
+        type: string
+      request_id:
+        type: string
+      transaction:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /orders/{order_uid}:
+    get:
+      description: Возвращает информацию о заказе по его OrderUID
+      parameters:
+      - description: Order UID
+        in: path
+        name: order_uid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешный ответ
+          schema:
+            $ref: '#/definitions/dto.Order'
+        "404":
+          description: Заказ не найден
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Получить заказ по ID
+      tags:
+      - orders
+swagger: "2.0"
