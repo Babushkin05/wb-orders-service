@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/Babushkin05/wb-orders-service/internal/config"
+	"github.com/Babushkin05/wb-orders-service/internal/infrastructure/kafka"
 	"github.com/Babushkin05/wb-orders-service/internal/infrastructure/postgres"
 	"github.com/Babushkin05/wb-orders-service/internal/infrastructure/redis"
 	"github.com/Babushkin05/wb-orders-service/pkg/logger"
@@ -30,4 +32,10 @@ func main() {
 	redis, err := redis.NewRedisCache(cfg.RedisConfig, DBconn)
 	logger.Log.Info("Redis initialized successfully")
 
+	inboxConsumer := kafka.NewInboxConsumer(cfg.KafkaConfig, db)
+	inboxProcessor := kafka.NewInboxProcessor(db)
+
+	ctx := context.Background()
+	inboxConsumer.Start(ctx)
+	inboxProcessor.Start(ctx)
 }

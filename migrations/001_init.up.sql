@@ -58,3 +58,12 @@ CREATE TABLE items (
 
 -- Create index for better performance on order_uid in items table
 CREATE INDEX idx_items_order_uid ON items(order_uid);
+
+-- Create inbox table (for inbox kafka messages)
+CREATE TABLE IF NOT EXISTS inbox (
+    message_id TEXT PRIMARY KEY,
+    topic TEXT NOT NULL,
+    payload TEXT NOT NULL,
+    processed BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
